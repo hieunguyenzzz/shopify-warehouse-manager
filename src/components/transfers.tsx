@@ -15,7 +15,7 @@ import {
   useBreakpoints,
 } from '@shopify/polaris';
 import type { IndexFiltersProps, PaginationProps, TabProps } from '@shopify/polaris';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { GetContainersQuery } from "@/__generated__/graphql";
 import { IndexTableHeading } from "@shopify/polaris/build/ts/src/components/IndexTable";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -50,6 +50,7 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
     await sleep(1);
     return true;
   };
+  const [loading, setLoading] = useState(false);
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -67,6 +68,7 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
     content: item,
     index,
     onAction: () => {
+      setLoading(true)
       if (item === 'All') return router.push(pathname)
       router.push(pathname + '?' + createQueryString('status', item.toLowerCase(), true))
     },
@@ -322,10 +324,13 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
       </IndexTable.Row>
     ),
   );
-
+  useEffect(() => {
+    setLoading(false)
+  }, [pathname, searchParams])
   return (
     <>
       <IndexFilters
+        loading={loading}
         sortOptions={sortOptions}
         sortSelected={sortSelected}
         queryValue={queryValue}
@@ -364,7 +369,15 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
             title: 'Name',
           }
         ]}
-        pagination={pagination}
+        pagination={{
+          ...pagination,
+          onNext() {
+            setLoading(true)
+          },
+          onPrevious() {
+            setLoading(true)
+          },
+        }}
       >
         {rowMarkup}
       </IndexTable>

@@ -1,4 +1,5 @@
 import { gql } from "@/__generated__";
+import Layout from "@/components/layout";
 import Transfers from "@/components/transfers";
 import client from "@/model";
 import { PaginationProps } from "@shopify/polaris";
@@ -62,10 +63,13 @@ export default async function Page({
   }
   )
   return (
-    <main className="">
-      <script type="json/data" id="transfers-data" dangerouslySetInnerHTML={{ __html: JSON.stringify(data, null, 2) }} />
-      <Transfers containerLineItems={items} extendEntites={extendEntites} pagination={pagination} />
-    </main>
+    <Layout>
+      <main className="">
+        <script type="json/data" id="transfers-data" dangerouslySetInnerHTML={{ __html: JSON.stringify(data, null, 2) }} />
+        <Transfers containerLineItems={items} extendEntites={extendEntites} pagination={pagination} />
+      </main>
+    </Layout>
+
   );
 }
 const GET_TRANSFERS = gql(/* GraphQL */ `
