@@ -302,7 +302,7 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
         {
           headings.map((heading, index) => {
             if (heading.id === 'status') {
-              return <IndexTable.Cell>
+              return <IndexTable.Cell key={heading.id}>
                 <Text variant="bodyMd" fontWeight="bold" as="span" alignment="end">
                   {
                     extendEntites?.[item.id]?.status === 'received' ? <Badge tone="success" progress="complete">{extendEntites?.[item.id]?.status}</Badge> : <Badge progress="incomplete">{extendEntites?.[item.id]?.status}</Badge>
@@ -310,7 +310,7 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
                 </Text>
               </IndexTable.Cell>
             }
-            return <IndexTable.Cell>
+            return <IndexTable.Cell key={heading.id}>
               <Text variant="bodyMd" fontWeight="bold" as="span">
                 {item[heading.title]}
               </Text>
