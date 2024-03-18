@@ -19,6 +19,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { GetContainersQuery } from "@/__generated__/graphql";
 import { IndexTableHeading } from "@shopify/polaris/build/ts/src/components/IndexTable";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 export type TransfersTableProps = {
   containerLineItems: GetContainersQuery['containers'],
   extendEntites: {
@@ -303,6 +304,16 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
       >
         {
           headings.map((heading, index) => {
+            if (!heading) return null
+            if (heading.id === 'id') return null
+            if (heading.id === 'name') return <IndexTable.Cell key={heading.id}>
+              <Link href={`/transfers/${item.id}`}>
+                <Text variant="bodyMd" fontWeight="bold" as="span">
+                  {item[heading.id]}
+                </Text>
+              </Link>
+            </IndexTable.Cell>
+
             if (heading.id === 'status') {
               return <IndexTable.Cell key={heading.id}>
                 <Text variant="bodyMd" fontWeight="bold" as="span" alignment="end">
@@ -364,7 +375,7 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
           allResourcesSelected ? 'All' : selectedResources.length
         }
         onSelectionChange={handleSelectionChange}
-        headings={headings?.length ? headings : [
+        headings={headings?.length ? headings.filter(h => h.id !== 'id') : [
           {
             title: 'Name',
           }

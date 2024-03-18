@@ -72,7 +72,7 @@ export default async function Page({
 
   );
 }
-const GET_TRANSFERS = gql(/* GraphQL */ `
+const GET_TRANSFERS = gql(/*GraphQL*/`
 query getContainers($take: Int, $skip: Int!, $cursor: ContainerWhereUniqueInput, $where: ContainerWhereInput!) {
   containersCount
   containers(take: $take,skip: $skip,cursor: $cursor,where: $where) {
