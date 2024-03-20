@@ -289,25 +289,22 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div style={{ height: '500px' }}>
-
-      <Frame
-        logo={logo}
-        topBar={topBarMarkup}
-        navigation={navigationMarkup}
-        showMobileNavigation={mobileNavigationActive}
-        onNavigationDismiss={toggleMobileNavigationActive}
-        skipToContentTarget={skipToContentRef}
-      >
-        {contextualSaveBarMarkup}
-        {loadingMarkup}
-        {children}
-        {toastMarkup}
-        {modalMarkup}
-        <Box padding="1000">
-        </Box>
-      </Frame>
-    </div>
+    <Frame
+      logo={logo}
+      topBar={topBarMarkup}
+      navigation={navigationMarkup}
+      showMobileNavigation={mobileNavigationActive}
+      onNavigationDismiss={toggleMobileNavigationActive}
+      skipToContentTarget={skipToContentRef}
+    >
+      {contextualSaveBarMarkup}
+      {loadingMarkup}
+      {children}
+      {toastMarkup}
+      {modalMarkup}
+      <Box padding="1000">
+      </Box>
+    </Frame>
   );
 }
 
