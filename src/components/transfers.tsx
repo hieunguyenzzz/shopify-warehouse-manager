@@ -1,25 +1,11 @@
 "use client"
-import { Button, Card, Page } from "@shopify/polaris";
-import Image from "next/image";
-import {
-  TextField,
-  IndexTable,
-  LegacyCard,
-  IndexFilters,
-  useSetIndexFiltersMode,
-  useIndexResourceState,
-  Text,
-  ChoiceList,
-  RangeSlider,
-  Badge,
-  useBreakpoints,
-} from '@shopify/polaris';
-import type { IndexFiltersProps, PaginationProps, TabProps } from '@shopify/polaris';
-import { useState, useCallback, useEffect } from 'react';
 import { GetContainersQuery } from "@/__generated__/graphql";
-import { IndexTableHeading } from "@shopify/polaris/build/ts/src/components/IndexTable";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getTransferProcess } from "@/helpers";
+import type { IndexFiltersProps, PaginationProps, TabProps } from '@shopify/polaris';
+import { Badge, BlockStack, Card, ChoiceList, IndexFilters, IndexTable, Page, ProgressBar, RangeSlider, Text, TextField, useBreakpoints, useIndexResourceState, useSetIndexFiltersMode } from "@shopify/polaris";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from 'react';
 export type TransfersTableProps = {
   containerLineItems: GetContainersQuery['containers'],
   extendEntites: {
@@ -295,45 +281,66 @@ function TransfersTable({ pagination, containerLineItems: items = [], extendEnti
     (
       item,
       index,
-    ) => (
-      <IndexTable.Row
-        id={item.id}
-        key={item.id}
-        selected={selectedResources.includes(item.id)}
-        position={index}
-      >
-        {
-          headings.map((heading, index) => {
-            if (!heading) return null
-            if (heading.id === 'id') return null
-            if (heading.id === 'name') return <IndexTable.Cell key={heading.id}>
-              <Link href={`/transfers/${item.id}`}>
-                <Text variant="bodyMd" fontWeight="bold" as="span">
-                  {item[heading.id]}
-                </Text>
-              </Link>
-            </IndexTable.Cell>
+    ) => {
+      const {
+        qty,
+        received_qty: received,
+        process
+      } = getTransferProcess({
+        inventoryItems: item.inventoryItems?.map(item => ({
+          qty: Number(item.qty),
+          remaining_qty: Number(item.remaining_qty)
+        })) || []
+      })
+      return (
+        <IndexTable.Row
+          id={item.id}
+          key={item.id}
+          selected={selectedResources.includes(item.id)}
+          position={index}
+        >
+          {
+            headings.map((heading, index) => {
+              if (!heading) return null
+              if (heading.id === 'id') return null
+              if (heading.id === 'name') return <IndexTable.Cell key={heading.id}>
+                <Link href={`/transfers/${item.id}`}>
+                  <Text variant="bodyMd" fontWeight="bold" as="span">
+                    {item[heading.id]}
+                  </Text>
+                </Link>
+              </IndexTable.Cell>
 
-            if (heading.id === 'status') {
+              if (heading.id === 'status') {
+                return <IndexTable.Cell key={heading.id}>
+                  <BlockStack gap={"300"}>
+                    <Text variant="bodyMd" fontWeight="bold" as="span" alignment="end">
+                      {
+                        received === 0 ? <Badge progress="incomplete" >Pending</Badge>
+                          : received === qty ? <Badge progress="complete" tone="success">Received</Badge>
+                            : <Badge progress="partiallyComplete">Partially received</Badge>
+                      }
+                    </Text>
+                    <BlockStack gap={"100"} align="end">
+                      <ProgressBar progress={process} size="small" />
+                      <Text as="p" alignment="end">Total received:{received} of {qty}</Text>
+                    </BlockStack>
+                  </BlockStack>
+
+                </IndexTable.Cell>
+              }
               return <IndexTable.Cell key={heading.id}>
-                <Text variant="bodyMd" fontWeight="bold" as="span" alignment="end">
-                  {
-                    extendEntites?.[item.id]?.status === 'received' ? <Badge tone="success" progress="complete">{extendEntites?.[item.id]?.status}</Badge> : <Badge progress="incomplete">{extendEntites?.[item.id]?.status}</Badge>
-                  }
+                <Text variant="bodyMd" fontWeight="bold" as="span">
+                  {item[heading.title]}
                 </Text>
               </IndexTable.Cell>
-            }
-            return <IndexTable.Cell key={heading.id}>
-              <Text variant="bodyMd" fontWeight="bold" as="span">
-                {item[heading.title]}
-              </Text>
-            </IndexTable.Cell>
-          })
-        }
+            })
+          }
 
 
-      </IndexTable.Row>
-    ),
+        </IndexTable.Row>
+      )
+    },
   );
   useEffect(() => {
     setLoading(false)

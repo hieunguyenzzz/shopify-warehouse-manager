@@ -1,12 +1,12 @@
 'use client'
 import {
   ActionList,
-  AppProvider,
-  LegacyCard,
+  Box,
   ContextualSaveBar,
   FormLayout,
   Frame,
   Layout,
+  LegacyCard,
   Loading,
   Modal,
   Navigation,
@@ -17,16 +17,14 @@ import {
   TextContainer,
   TextField,
   Toast,
-  TopBar,
+  TopBar
 } from '@shopify/polaris';
 import {
-  ArrowLeftIcon,
   HomeIcon,
-  OrderIcon,
-  ChatIcon,
+  OrderIcon
 } from '@shopify/polaris-icons';
-import { useParams, usePathname, useRouter } from 'next/navigation';
-import { useState, useCallback, useRef, use } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useCallback, useRef, useState } from 'react';
 
 function BaseLayout({ children }: { children: React.ReactNode }) {
   const defaultState = useRef({
@@ -306,6 +304,8 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
         {children}
         {toastMarkup}
         {modalMarkup}
+        <Box padding="1000">
+        </Box>
       </Frame>
     </div>
   );
