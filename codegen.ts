@@ -1,7 +1,7 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: 'https://soundboxstore-inventory-ks.x67nf4.easypanel.host/api/graphql',
+  schema: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
   // this assumes that all your source files are in a top-level `src/` directory - you might need to adjust this to your file structure
   documents: ['src/**/*.{ts,tsx}'],
   generates: {
