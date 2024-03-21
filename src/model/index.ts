@@ -1,7 +1,7 @@
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache, gql } from '@apollo/client';
 const client = new ApolloClient({
-  uri: 'https://soundboxstore-inventory-ks.x67nf4.easypanel.host/api/graphql',
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
   cache: new InMemoryCache(),
 });
-export { ApolloProvider, gql }
+export { ApolloProvider, gql };
 export default client

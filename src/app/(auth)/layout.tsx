@@ -40,7 +40,7 @@ export default async function RootLayout({
   let session = cookies().get("keystonejs-session");
   console.log({ session });
   let res = await fetch(
-    "https://soundboxstore-inventory-ks.x67nf4.easypanel.host/api/graphql",
+    process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
     {
       method: "POST",
       headers: {

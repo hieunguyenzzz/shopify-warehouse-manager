@@ -32,7 +32,7 @@ export default function Login() {
     };
     console.log({ rawFormData });
     let res = await fetch(
-      "https://soundboxstore-inventory-ks.x67nf4.easypanel.host/api/graphql",
+      process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
       {
         method: "POST",
         headers: {
