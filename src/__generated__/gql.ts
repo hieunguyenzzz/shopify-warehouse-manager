@@ -13,6 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\nquery getLocations {\n  locations {\n    id\n    inventoryItemsCount\n    name\n  }\n}\n": types.GetLocationsDocument,
+    "\nquery getInventoryProducts($take: Int, $skip: Int!, $where: LocationWhereUniqueInput!) {\n  location(where: $where) {\n    id\n    name\n    inventoryItemsCount\n    inventoryItems(take: $take,skip: $skip) {\n      id\n      allocated_qty\n      container {\n        id\n        name\n      }\n      qty\n      remaining_qty\n      eta\n      product {\n        category {\n          name\n        }\n        cbm\n        finish\n        id\n        sku\n        supplierSku\n        price\n        name\n      }\n    }\n  }\n}\n": types.GetInventoryProductsDocument,
     "\n  query getContainer($where: ContainerWhereUniqueInput!){\n    container(where: $where) {\n      id\n      name\n      qty_due_in\n      dueDate\n      inventoryItems {\n        product {\n          name\n          sku\n        }\n        qty\n        remaining_qty\n      }\n    }\n  }\n": types.GetContainerDocument,
     "\nquery getContainers($take: Int, $skip: Int!, $cursor: ContainerWhereUniqueInput, $where: ContainerWhereInput!) {\n  containersCount\n  containers(take: $take,skip: $skip,cursor: $cursor,where: $where) {\n    id\n    name\n    qty_due_in\n    dueDate\n    inventoryItems {\n      product {\n        name\n      }\n      qty\n      remaining_qty\n    }\n  }\n}\n": types.GetContainersDocument,
 };
@@ -31,6 +33,14 @@ const documents = {
  */
 export function gql(source: string): unknown;
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery getLocations {\n  locations {\n    id\n    inventoryItemsCount\n    name\n  }\n}\n"): (typeof documents)["\nquery getLocations {\n  locations {\n    id\n    inventoryItemsCount\n    name\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery getInventoryProducts($take: Int, $skip: Int!, $where: LocationWhereUniqueInput!) {\n  location(where: $where) {\n    id\n    name\n    inventoryItemsCount\n    inventoryItems(take: $take,skip: $skip) {\n      id\n      allocated_qty\n      container {\n        id\n        name\n      }\n      qty\n      remaining_qty\n      eta\n      product {\n        category {\n          name\n        }\n        cbm\n        finish\n        id\n        sku\n        supplierSku\n        price\n        name\n      }\n    }\n  }\n}\n"): (typeof documents)["\nquery getInventoryProducts($take: Int, $skip: Int!, $where: LocationWhereUniqueInput!) {\n  location(where: $where) {\n    id\n    name\n    inventoryItemsCount\n    inventoryItems(take: $take,skip: $skip) {\n      id\n      allocated_qty\n      container {\n        id\n        name\n      }\n      qty\n      remaining_qty\n      eta\n      product {\n        category {\n          name\n        }\n        cbm\n        finish\n        id\n        sku\n        supplierSku\n        price\n        name\n      }\n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

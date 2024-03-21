@@ -5,16 +5,9 @@ import {
   ContextualSaveBar,
   FormLayout,
   Frame,
-  Layout,
-  LegacyCard,
   Loading,
   Modal,
   Navigation,
-  Page,
-  SkeletonBodyText,
-  SkeletonDisplayText,
-  SkeletonPage,
-  TextContainer,
   TextField,
   Toast,
   TopBar
@@ -29,7 +22,7 @@ import { useCallback, useRef, useState } from 'react';
 function BaseLayout({ children }: { children: React.ReactNode }) {
   const defaultState = useRef({
     emailFieldValue: 'dharma@jadedpixel.com',
-    nameFieldValue: 'Jaded Pixel',
+    nameFieldValue: 'SoundboxStore',
   });
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
 
@@ -74,14 +67,6 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
     setToastActive(true);
     setStoreName(defaultState.current.nameFieldValue);
   }, [emailFieldValue, nameFieldValue]);
-  const handleNameFieldChange = useCallback((value: string) => {
-    setNameFieldValue(value);
-    value && setIsDirty(true);
-  }, []);
-  const handleEmailFieldChange = useCallback((value: string) => {
-    setEmailFieldValue(value);
-    value && setIsDirty(true);
-  }, []);
   const handleSearchResultsDismiss = useCallback(() => {
     setSearchActive(false);
     setSearchValue('');
@@ -103,10 +88,6 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
       setMobileNavigationActive(
         (mobileNavigationActive) => !mobileNavigationActive,
       ),
-    [],
-  );
-  const toggleIsLoading = useCallback(
-    () => setIsLoading((isLoading) => !isLoading),
     [],
   );
   const toggleModalActive = useCallback(
@@ -173,13 +154,15 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
   );
   const router = useRouter()
   const pathName = usePathname()
+  console.log({ pathName })
+  let paths = pathName.split('/')
   const navigationMarkup = (
     <Navigation location={pathName} >
       <Navigation.Section
         items={[
           {
             label: 'Home',
-            selected: pathName === '/',
+            selected: paths[1] === '',
             url: '/',
             icon: HomeIcon,
             onClick: () => router.push('/'),
@@ -187,9 +170,16 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
           {
             label: 'Transfers',
             url: '/transfers',
-            selected: pathName === '/transfers',
+            selected: paths[1] === 'transfers',
             icon: OrderIcon,
             onClick: () => router.push('/transfers'),
+          },
+          {
+            label: 'Inventory',
+            url: '/inventory',
+            selected: paths[1] === 'inventory',
+            icon: OrderIcon,
+            onClick: () => router.push('/inventory'),
           },
         ]}
 
@@ -199,54 +189,6 @@ function BaseLayout({ children }: { children: React.ReactNode }) {
 
   const loadingMarkup = isLoading ? <Loading /> : null;
 
-  const skipToContentTarget = (
-    <a id="SkipToContentTarget" ref={skipToContentRef} tabIndex={-1} />
-  );
-
-  const actualPageMarkup = (
-    <Page title="Account">
-      <Layout>
-        {skipToContentTarget}
-        <Layout.AnnotatedSection
-          title="Account details"
-          description="Jaded Pixel will use this as your account information."
-        >
-          <LegacyCard sectioned>
-            <FormLayout>
-              <TextField
-                label="Full name"
-                value={nameFieldValue}
-                onChange={handleNameFieldChange}
-                autoComplete="name"
-              />
-              <TextField
-                type="email"
-                label="Email"
-                value={emailFieldValue}
-                onChange={handleEmailFieldChange}
-                autoComplete="email"
-              />
-            </FormLayout>
-          </LegacyCard>
-        </Layout.AnnotatedSection>
-      </Layout>
-    </Page>
-  );
-
-  const loadingPageMarkup = (
-    <SkeletonPage>
-      <Layout>
-        <Layout.Section>
-          <LegacyCard sectioned>
-            <TextContainer>
-              <SkeletonDisplayText size="small" />
-              <SkeletonBodyText lines={9} />
-            </TextContainer>
-          </LegacyCard>
-        </Layout.Section>
-      </Layout>
-    </SkeletonPage>
-  );
 
 
   const modalMarkup = (
