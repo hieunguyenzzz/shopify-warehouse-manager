@@ -1,7 +1,7 @@
 import Inventory from "@/components/inventory";
 import Layout from "@/components/layout";
+import { getPagination, getPaginationVariables } from "@/helpers/pagination";
 import client from "@/model";
-import { PaginationProps } from "@shopify/polaris";
 import { GET_INVENTORY_PRODUCTS, GET_LOCATIONS } from "../_const";
 
 export default async function Page({
@@ -11,10 +11,11 @@ export default async function Page({
   params: { id: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
-  let limit = Number(searchParams.limit || 10)
-  let page = Number(searchParams.page || 1)
-  let take = Number(limit)
-  let skip = page > 1 ? (page - 1) * limit : 0
+  const {
+    limit,
+    page,
+    variables
+  } = getPaginationVariables({ searchParams })
   const { data: locationsRes } = await client.query({
     query: GET_LOCATIONS,
     variables: {
@@ -25,8 +26,7 @@ export default async function Page({
   const { data: inventoryRes } = await client.query({
     query: GET_INVENTORY_PRODUCTS,
     variables: {
-      take,
-      skip,
+      ...variables,
       where: {
         id,
       }
@@ -34,22 +34,14 @@ export default async function Page({
   })
   let location = inventoryRes.location
   let count = location?.inventoryItemsCount || 0
-  let items = location?.inventoryItems
   let total = count
-  let pagination: PaginationProps = {
-    hasNext: total > limit * page,
-    hasPrevious: page > 1,
-    nextURL: `/inventory/${id}?${new URLSearchParams({
-      ...searchParams,
-      page: String(page + 1),
-      limit: String(limit)
-    }).toString()}`,
-    previousURL: `/inventory/${id}?${new URLSearchParams({
-      ...searchParams,
-      page: String(page - 1),
-      limit: String(limit)
-    }).toString()}`,
-  }
+  let pagination = getPagination({
+    limit,
+    page,
+    pathname: `/inventory/${id}`,
+    searchParams,
+    total
+  })
   return (
     <Layout>
       <main className="">

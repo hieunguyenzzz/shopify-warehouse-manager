@@ -1,27 +1,26 @@
 import { gql } from "@/__generated__";
 import Layout from "@/components/layout";
 import Transfers from "@/components/transfers";
+import { getPagination, getPaginationVariables } from "@/helpers/pagination";
 import client from "@/model";
 import { PaginationProps } from "@shopify/polaris";
 
 export default async function Page({
-  params,
   searchParams,
 }: {
-  params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
   let status = searchParams.status
-  let limit = Number(searchParams.limit || 10)
-  let page = Number(searchParams.page || 1)
-  let take = Number(limit)
-  let skip = page > 1 ? (page - 1) * limit : 0
+  const {
+    limit,
+    page,
+    variables
+  } = getPaginationVariables({ searchParams })
   let cursor = null
   const { data, error } = await client.query({
     query: GET_TRANSFERS,
     variables: {
-      take,
-      skip,
+      ...variables,
       where: status ? {
         dueDate: status === 'pending' ? {
           gt: new Date().toISOString().split('T')[0]
@@ -35,20 +34,13 @@ export default async function Page({
   let count = data.containersCount ? data.containersCount : 0
   let items = data.containers || []
   let total = count
-  let pagination: PaginationProps = {
-    hasNext: total > limit * page,
-    hasPrevious: page > 1,
-    nextURL: `/transfers?${new URLSearchParams({
-      ...searchParams,
-      page: String(page + 1),
-      limit: String(limit)
-    }).toString()}`,
-    previousURL: `/transfers?${new URLSearchParams({
-      ...searchParams,
-      page: String(page - 1),
-      limit: String(limit)
-    }).toString()}`,
-  }
+  let pagination: PaginationProps = getPagination({
+    limit,
+    page,
+    pathname: `/transfers`,
+    searchParams,
+    total
+  })
   let extendEntites: {
     [key: string]: {
       status: any
