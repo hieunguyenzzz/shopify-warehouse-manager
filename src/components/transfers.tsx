@@ -6,6 +6,8 @@ import { Badge, BlockStack, Card, ChoiceList, IndexFilters, IndexTable, Page, Pr
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from 'react';
+import DefaultTable from "./common/DefaultTable";
+import { flatten } from "@/utils/flatten";
 export type TransfersTableProps = {
   containerLineItems: GetContainersQuery['containers'],
   extendEntites: {
@@ -432,6 +434,48 @@ export default function Transfers(props: TransfersTableProps) {
     }}>
       <Card padding={"0"}>
         <TransfersTable {...props} />
+        <DefaultTable
+          {
+          ...{
+            extendEntites: {},
+            pagination: props.pagination,
+            lineItems: props.containerLineItems?.map(item => ({
+              ...item,
+              url: `/transfers/${item.id}`,
+              ...getTransferProcess({
+                inventoryItems: item.inventoryItems?.map(item => ({
+                  qty: Number(item.qty),
+                  remaining_qty: Number(item.remaining_qty)
+                })) || []
+              })
+            })).map(flatten) || [],
+            columns: [
+              {
+                id: 'id',
+                title: 'ID',
+              },
+              {
+                id: 'name',
+                title: 'Name'
+              },
+              {
+                id: 'dueDate',
+                title: 'Due Date'
+              },
+              {
+                id: 'remaining_qty',
+                title: 'Remaining Qty'
+              },
+              {
+                id: 'qty',
+                title: 'Qty'
+              }
+            ]
+
+          }
+          }
+
+        />
       </Card>
     </Page>
   );
