@@ -23,6 +23,10 @@ export default function Inventory(props: TransfersTableProps) {
       content: 'Add transfer',
       onAction: () => console.log('clicked'),
     }}
+      backAction={{
+        content: 'Back',
+        url: '/inventory'
+      }}
     >
       <Box paddingBlockEnd={'300'}>
         <PopoverWithLocations {...props} />

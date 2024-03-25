@@ -12,10 +12,11 @@ export type DefaultTableProps = {
   extendEntites: {
     [key: string]: any
   }
+  tabs?: TabProps[]
   pagination: PaginationProps
   columns?: IndexTableHeading[]
 }
-function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
+function DefaultTable({ pagination, tabs: _tabs, lineItems, columns }: DefaultTableProps) {
   const [itemStrings, setItemStrings] = useState([
     'All',
   ]);
@@ -34,7 +35,7 @@ function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
     },
     [searchParams]
   )
-  const tabs: TabProps[] = itemStrings.map((item, index) => ({
+  const tabs: TabProps[] = _tabs || itemStrings.map((item, index) => ({
     content: item,
     index,
     onAction: () => {
@@ -129,11 +130,11 @@ function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
       alignment?: any
     }[]
     headings = headings.filter(Boolean)
-    headings.push({
-      id: 'status',
-      title: 'Status',
-      alignment: 'end'
-    })
+    // headings.push({
+    //   id: 'status',
+    //   title: 'Status',
+    //   alignment: 'end'
+    // })
     headings.map((heading) => {
       if (!heading?.id) {
         heading.id = heading.title
