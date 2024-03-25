@@ -15,9 +15,10 @@ export type DefaultTableProps = {
   pagination: PaginationProps
   columns?: IndexTableHeading[]
 }
-function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
+function DefaultDataTable({ pagination, lineItems, columns }: DefaultTableProps) {
   const [itemStrings, setItemStrings] = useState([
     'All',
+    'Incoming',
   ]);
 
   const [loading, setLoading] = useState(false);
@@ -51,6 +52,9 @@ function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
     return true;
   };
   const sortOptions: IndexFiltersProps['sortOptions'] = [
+
+    { label: 'Date', value: 'date asc', directionLabel: 'date asc' },
+    { label: 'Date', value: 'date desc', directionLabel: 'date desc' },
 
   ];
   const [sortSelected, setSortSelected] = useState(['order asc']);
@@ -161,7 +165,7 @@ function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
               if (!heading) return null
               if (heading.id === 'id') return null
               if (heading.id === 'name') return <IndexTable.Cell key={heading.id}>
-                <Link href={`${item.url}`}>
+                <Link href={`/transfers/${item.id}`}>
                   <Text variant="bodyMd" fontWeight="bold" as="span">
                     {item[heading.id]}
                   </Text>
@@ -241,4 +245,4 @@ function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
   );
 }
 
-export default DefaultTable
+export default DefaultDataTable

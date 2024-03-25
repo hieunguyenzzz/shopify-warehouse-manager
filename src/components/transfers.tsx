@@ -465,6 +465,7 @@ export default function Transfers(props: TransfersTableProps) {
             return {
               id: item.id,
               name: item.name,
+              url: `/transfers/${item.id}`,
               qty,
               dueDate: item.dueDate,
               remaining_qty,
