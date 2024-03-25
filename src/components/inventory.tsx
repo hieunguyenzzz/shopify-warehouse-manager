@@ -46,6 +46,14 @@ export default function Inventory(props: TransfersTableProps) {
               title: 'Product Sku'
             },
             {
+              id: 'product.supplierSku',
+              title: 'Supplier Sku'
+            },
+            {
+              id: 'product.cbm',
+              title: 'Cbm'
+            },
+            {
               id: 'remaining_qty',
               title: 'Remaining qty'
             },
