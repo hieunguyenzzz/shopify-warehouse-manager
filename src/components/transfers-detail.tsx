@@ -2,7 +2,7 @@
 
 import { GetContainerQuery } from "@/__generated__/graphql"
 import { getTransferProcess } from "@/helpers"
-import { Badge, BlockStack, Box, Button, Card, Form, IndexTable, InlineStack, Layout, Page, ProgressBar, SkeletonThumbnail, Text, TextField } from "@shopify/polaris"
+import { Badge, BlockStack, Box, Button, Card, Form, IndexTable, InlineStack, Layout, Page, SkeletonThumbnail, Text, TextField } from "@shopify/polaris"
 import { useEffect, useState } from "react"
 
 export default function TransfersDetail({
@@ -53,12 +53,7 @@ export default function TransfersDetail({
                 </Box>
               </div>
             </InlineStack>
-            <Box padding={"600"} borderBlockStartWidth="0165" borderColor="border-secondary">
-              <BlockStack gap={"100"} align="end">
-                <ProgressBar progress={process} size="small" />
-                <Text as="p" alignment="end">Total received:{received} of {qty}</Text>
-              </BlockStack>
-            </Box>
+
           </Card>
         </Layout.Section>
         <Layout.Section>
@@ -79,7 +74,8 @@ export default function TransfersDetail({
                 headings={[
                   { title: 'Product' },
                   { title: 'SKU' },
-                  { title: 'Reviceived' },
+                  { title: 'remaining qty' },
+                  { title: 'qty' },
                 ]}
               >
                 {
@@ -100,10 +96,8 @@ export default function TransfersDetail({
                         </InlineStack>
                       </IndexTable.Cell>
                       <IndexTable.Cell>{item.product?.sku}</IndexTable.Cell>
-                      <IndexTable.Cell>  <BlockStack gap={"100"} align="end">
-                        <ProgressBar progress={(Number(item.qty) - Number(item.remaining_qty)) / Number(item.qty) * 100} size="small" />
-                        <Text as="p" alignment="end">{Number(item.qty) - Number(item.remaining_qty)} of {item.qty}</Text>
-                      </BlockStack></IndexTable.Cell>
+                      <IndexTable.Cell>{item.remaining_qty}</IndexTable.Cell>
+                      <IndexTable.Cell>{item.qty}</IndexTable.Cell>
                     </IndexTable.Row>))
                 }
               </IndexTable>
@@ -159,24 +153,6 @@ export default function TransfersDetail({
         <Layout.Section >
           <TimeLine id="" />
         </Layout.Section>
-        {/* <Layout.Section>
-          <Card>
-            <h1>Container: {container.name}</h1>
-            <h2>Due Date: {container.dueDate}</h2>
-            <h2>Qty Due In: {container.qty_due_in}</h2>
-            <h2>Inventory Items</h2>
-            <ul>
-              {container?.inventoryItems?.map((item, index) => (
-                <li key={index}>
-                  <h3>Product: {item.product?.name}</h3>
-                  <h4>SKU: {item.product?.sku}</h4>
-                  <h4>Qty: {item.qty}</h4>
-                  <h4>Remaining Qty: {item.remaining_qty}</h4>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </Layout.Section> */}
       </Layout>
 
     </Page>

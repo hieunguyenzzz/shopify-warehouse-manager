@@ -18,7 +18,6 @@ export type DefaultTableProps = {
 function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
   const [itemStrings, setItemStrings] = useState([
     'All',
-    'Incoming',
   ]);
 
   const [loading, setLoading] = useState(false);
@@ -216,6 +215,7 @@ function DefaultTable({ pagination, lineItems, columns }: DefaultTableProps) {
         showEditColumnsButton
       />
       <IndexTable
+        selectable={false}
         condensed={useBreakpoints().smDown}
         resourceName={resourceName}
         itemCount={lineItems.length}

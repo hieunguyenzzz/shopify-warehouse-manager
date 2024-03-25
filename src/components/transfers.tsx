@@ -1,11 +1,13 @@
 "use client"
 import { GetContainersQuery } from "@/__generated__/graphql";
 import { getTransferProcess } from "@/helpers";
+import { flatten } from "@/utils/flatten";
 import type { IndexFiltersProps, PaginationProps, TabProps } from '@shopify/polaris';
 import { Badge, BlockStack, Card, ChoiceList, IndexFilters, IndexTable, Page, ProgressBar, RangeSlider, Text, TextField, useBreakpoints, useIndexResourceState, useSetIndexFiltersMode } from "@shopify/polaris";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from 'react';
+import DefaultTable from "./common/DefaultTable";
 export type TransfersTableProps = {
   containerLineItems: GetContainersQuery['containers'],
   extendEntites: {
@@ -430,8 +432,47 @@ export default function Transfers(props: TransfersTableProps) {
       onAction: () => console.log('clicked'),
 
     }}>
+
       <Card padding={"0"}>
-        <TransfersTable {...props} />
+        <DefaultTable {...{
+          columns: [{
+            id: 'id',
+            title: 'ID',
+          }, {
+            id: 'name',
+            title: 'Name',
+          }, {
+            id: 'dueDate',
+            title: 'Due Date',
+          }, {
+            id: 'remaining_qty',
+            title: 'Remaining Qty',
+          }, {
+            id: 'qty',
+            title: 'Qty',
+          },],
+          extendEntites: props.extendEntites,
+          lineItems: props.containerLineItems?.map(item => {
+            const {
+              qty,
+              remaining_qty
+            } = getTransferProcess({
+              inventoryItems: item.inventoryItems?.map(item => ({
+                qty: Number(item.qty),
+                remaining_qty: Number(item.remaining_qty)
+              })) || []
+            })
+            return {
+              id: item.id,
+              name: item.name,
+              qty,
+              dueDate: item.dueDate,
+              remaining_qty,
+            }
+          }).map(flatten) || [],
+          pagination: props.pagination
+
+        }} />
       </Card>
     </Page>
   );
